@@ -182,7 +182,8 @@ async function startSearch(){
 
 document.querySelectorAll(".row .btn").forEach(btn=>{
   btn.onclick = function(){
-    window.open("https://tribex-backend.onrender.com/api/download","_blank");
+    const link = document.getElementById("linkInput").value.trim();
+window.open("https://tribex-backend.onrender.com/api/download?url=" + encodeURIComponent(link), "_blank");
   }
 });
 
