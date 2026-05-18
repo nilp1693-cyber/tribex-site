@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Tribex Video Downloader</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      text-align: center;
+    }
+    .box {
+      max-width: 600px;
+      margin: 80px auto;
+      background: #111827;
+      padding: 30px;
+      border-radius: 18px;
+    }
+    input {
+      width: 90%;
+      padding: 15px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      background: #22c55e;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .card {
+      margin-top: 25px;
+      background: #1f2937;
+      padding: 20px;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>TRIBEX</h1>
+    <p>Ads-Free Video Downloader Browser UI</p>
+
+    <input type="text" placeholder="Paste video link here">
+    <br>
+    <button onclick="showBox()">Search</button>
+
+    <div class="card" id="result" style="display:none;">
+      <h3>Video Found</h3>
+      <p>Select Quality</p>
+      <button>MP4 360p</button>
+      <button>MP4 720p</button>
+      <button>M4A Audio</button>
+    </div>
+  </div>
+
+  <script>
+    function showBox() {
+      document.getElementById("result").style.display = "block";
+    }
+  </script>
+</body>
+</html>
