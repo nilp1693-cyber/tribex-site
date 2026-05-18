@@ -12,7 +12,7 @@
     .logo{font-size:24px;font-weight:900}.logo span{color:#22c55e}
     nav a{color:white;text-decoration:none;margin:0 10px;font-size:14px}
     .toggle{background:#22c55e;color:white;border:0;padding:8px 14px;border-radius:20px;cursor:pointer}
-    .hero{min-height:520px;text-align:center;color:white;padding:70px 8%;background:linear-gradient(135deg,#00c6ff,#00c98b);position:relative;overflow:hidden}
+    .hero{min-height:520px;text-align:center;color:white;padding:70px 8%;background:linear-gradient(135deg,#00c6ff,#00c98b)}
     .hero h1{font-size:55px}.hero p{margin-top:6px}
     .glass{max-width:900px;margin:25px auto;padding:14px;background:#ffffff33;backdrop-filter:blur(15px);border:1px solid #ffffff55;border-radius:18px}
     .search{display:flex;gap:10px;background:white;border-radius:12px;padding:10px}
@@ -23,7 +23,7 @@
     .result{display:none;max-width:900px;margin:25px auto;background:white;color:#111;border-radius:16px;padding:18px;text-align:left;box-shadow:0 10px 30px #0002}
     body.dark .result,body.dark .card,body.dark details{background:#111827;color:white}
     .video-box{display:grid;grid-template-columns:260px 1fr;gap:18px}
-    .thumb{height:160px;border-radius:12px;background:#0b1220;color:white;display:flex;align-items:center;justify-content:center;font-size:50px}
+    .thumb{height:160px;border-radius:12px;background:#0b1220;color:white;display:flex;align-items:center;justify-content:center;font-size:50px;overflow:hidden}
     .row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;padding:12px}
     body.dark .row{border-bottom:1px solid #333}
     .tag{background:#f59e0b;color:white;padding:4px 8px;border-radius:5px}
@@ -64,7 +64,7 @@
 
   <div class="glass">
     <div class="search">
-      <input id="linkInput" placeholder="Paste video link here...">
+      <input id="linkInput" placeholder="Paste YouTube video link here...">
       <button class="btn" onclick="startSearch()">Download</button>
     </div>
   </div>
@@ -125,9 +125,9 @@
 <section id="faq">
   <h2>FAQ</h2>
   <div class="faq">
-    <details><summary>Is this real downloader?</summary><p>Right now this is frontend UI. Real API/backend can be added later.</p></details>
+    <details><summary>Thumbnail show hoga?</summary><p>Yes, YouTube link paste karne par thumbnail show hoga.</p></details>
+    <details><summary>Download button real hai?</summary><p>Abhi demo hai. Real download ke liye backend/API chahiye.</p></details>
     <details><summary>Does it have ads?</summary><p>No, this design has no ads.</p></details>
-    <details><summary>Can I install it like an app?</summary><p>Yes, PWA setup can be added next.</p></details>
   </div>
 </section>
 
@@ -137,42 +137,69 @@
 </footer>
 
 <script>
-  function startSearch(){
-    const input=document.getElementById("linkInput").value.trim();
-    if(!input){alert("Please paste a video link first");return;}
+function getYouTubeId(url) {
+  const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|shorts\/))([^&?/]+)/);
+  return match ? match[1] : null;
+}
 
-    document.getElementById("result").style.display="none";
-    document.getElementById("loader").style.display="block";
-
-    setTimeout(()=>{
-      document.getElementById("loader").style.display="none";
-      document.getElementById("result").style.display="block";
-      document.getElementById("videoLink").innerText=input;
-      saveHistory(input);
-    },1200);
+function startSearch(){
+  const input = document.getElementById("linkInput").value.trim();
+  if(!input){
+    alert("Please paste a video link first");
+    return;
   }
 
-  function saveHistory(link){
-    let history=JSON.parse(localStorage.getItem("tribexHistory"))||[];
-    history.unshift(link);
-    history=history.slice(0,5);
-    localStorage.setItem("tribexHistory",JSON.stringify(history));
-    showHistory();
-  }
+  document.getElementById("result").style.display = "none";
+  document.getElementById("loader").style.display = "block";
 
-  function showHistory(){
-    let history=JSON.parse(localStorage.getItem("tribexHistory"))||[];
-    const box=document.getElementById("historyBox");
-    box.innerHTML=history.length?history.map(item=>`<p>${item}</p>`).join(""):"<p>No search yet.</p>";
-  }
+  setTimeout(()=>{
+    document.getElementById("loader").style.display = "none";
+    document.getElementById("result").style.display = "block";
+    document.getElementById("videoLink").innerText = input;
 
-  function toggleMode(){
-    document.body.classList.toggle("dark");
-    localStorage.setItem("tribexMode",document.body.classList.contains("dark")?"dark":"light");
-  }
+    const ytId = getYouTubeId(input);
+    const thumb = document.querySelector(".thumb");
 
-  if(localStorage.getItem("tribexMode")==="dark"){document.body.classList.add("dark");}
+    if(ytId){
+      thumb.innerHTML = `<img src="https://img.youtube.com/vi/${ytId}/hqdefault.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">`;
+    } else {
+      thumb.innerHTML = "▶";
+    }
+
+    saveHistory(input);
+  },1200);
+}
+
+document.querySelectorAll(".row .btn").forEach(btn=>{
+  btn.onclick = function(){
+    alert("Real download ke liye backend/API chahiye. Abhi ye UI demo hai.");
+  }
+});
+
+function saveHistory(link){
+  let history = JSON.parse(localStorage.getItem("tribexHistory")) || [];
+  history.unshift(link);
+  history = history.slice(0,5);
+  localStorage.setItem("tribexHistory", JSON.stringify(history));
   showHistory();
+}
+
+function showHistory(){
+  let history = JSON.parse(localStorage.getItem("tribexHistory")) || [];
+  const box = document.getElementById("historyBox");
+  box.innerHTML = history.length ? history.map(item=>`<p>${item}</p>`).join("") : "<p>No search yet.</p>";
+}
+
+function toggleMode(){
+  document.body.classList.toggle("dark");
+  localStorage.setItem("tribexMode", document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+if(localStorage.getItem("tribexMode") === "dark"){
+  document.body.classList.add("dark");
+}
+
+showHistory();
 </script>
 </body>
 </html>
